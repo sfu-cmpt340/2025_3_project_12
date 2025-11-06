@@ -6,7 +6,7 @@ Add a 1-2 line summary of your project here.
 
 Group Members:
 1. Hieu Tran
-2. 
+2. Charles Lee
 3. Ana Premovic
 4. Temirlan Utarbayev
 5. Matthew Pham
