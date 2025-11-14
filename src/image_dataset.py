@@ -2,22 +2,23 @@ import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
 import torch
-from util import get_path
+from pathlib import Path
+from typing import Callable, Optional, Tuple, Union
 
 DIAGNOSIS_COLUMN_NAME = "diagnosis"
 POSITIVE_CLASS = "melanoma"
 IMAGE_FILEPATH_COLUMN_NAME = "derm"
 
 class MelanomaImageDataset(Dataset):
-    def __init__(self, metadata_csv_path, images_dir, transform=None):
-        self.metadata_dataframe = pd.read_csv(get_path(metadata_csv_path))
-        self.images_directory = get_path(images_dir)
+    def __init__(self, metadata_csv_path: Path, images_dir: Path, transform: Optional[Callable] = None):
+        self.metadata_dataframe = pd.read_csv(metadata_csv_path)
+        self.images_directory = images_dir
         self.transform = transform
 
     def __len__(self):
         return len(self.metadata_dataframe)
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> Tuple[Union[Image.Image, torch.Tensor], torch.Tensor]:
         metadata_row = self.metadata_dataframe.iloc[index]
         image_relative_path = metadata_row[IMAGE_FILEPATH_COLUMN_NAME]
         image_absolute_path = self.images_directory.joinpath(image_relative_path)
