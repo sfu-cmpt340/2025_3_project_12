@@ -12,7 +12,7 @@ class MelanomaImageDataset(Dataset):
         self.images_directory = images_dir
         self.transform = transform
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.metadata_dataframe)
 
     def __getitem__(self, index: int) -> Tuple[Union[Image.Image, torch.Tensor], torch.Tensor]:
