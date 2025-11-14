@@ -42,23 +42,10 @@ class ImageDatasetLoader:
 
     @staticmethod
     def _get_inception_v3_image_transform(loader_type: LoaderType) -> transforms.Compose:
-        if loader_type == LoaderType.TRAINING:
-            return (
-                transforms.Compose([
-                    transforms.Resize((299, 299)),
-                    transforms.RandomHorizontalFlip(),
-                    transforms.RandomRotation(10),
-                    transforms.ToTensor(),
-                    transforms.Normalize(
-                        mean=[0.485, 0.456, 0.406],
-                        std=[0.229, 0.224, 0.225]
-                    ),
-                ]))
-        else:
-            return transforms.Compose([
-                transforms.Resize((299, 299)),
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=[0.485, 0.456, 0.406],
-                    std=[0.229, 0.224, 0.225]),
-            ])
+        return transforms.Compose([
+            transforms.Resize((299, 299)),
+            transforms.ToTensor(),
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225]),
+        ])
