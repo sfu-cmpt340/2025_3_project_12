@@ -11,8 +11,8 @@ class LoaderType(Enum):
     VALIDATION = 2
     TEST = 3
 
-def get_loader(loader_type: LoaderType) -> DataLoader:
-    dataset = MelanomaImageDataset(
+def get_melanoma_image_dataset_loader(loader_type: LoaderType) -> DataLoader:
+    full_dataset = MelanomaImageDataset(
         metadata_csv_path = config.METADATA_FILE,
         images_dir= config.IMAGE_DIRECTORY,
         transform=_get_inception_v3_image_transform()
@@ -26,8 +26,8 @@ def get_loader(loader_type: LoaderType) -> DataLoader:
 
     file_path, shuffle = loader_map[loader_type]
     indices = _load_indices(file_path)
-    subset_dataset = Subset(dataset, indices)
-    return DataLoader(subset_dataset, batch_size=32, shuffle=shuffle)
+    loader_type_subset = Subset(full_dataset, indices)
+    return DataLoader(loader_type_subset, batch_size=32, shuffle=shuffle)
 
 def _load_indices(csv_path: Path) -> list:
     indices = []
