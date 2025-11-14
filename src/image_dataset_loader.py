@@ -16,7 +16,7 @@ class ImageDatasetLoader:
         dataset = MelanomaImageDataset(
             metadata_csv_path = get_path("data/image_data/meta/meta.csv"),
             images_dir= get_path("data/image_data/images/"),
-            transform=self._get_inception_v3_image_transform(loader_type)
+            transform=self._get_inception_v3_image_transform()
         )
 
         loader_map = {
@@ -41,7 +41,7 @@ class ImageDatasetLoader:
         return indices
 
     @staticmethod
-    def _get_inception_v3_image_transform(loader_type: LoaderType) -> transforms.Compose:
+    def _get_inception_v3_image_transform() -> transforms.Compose:
         return transforms.Compose([
             transforms.Resize((299, 299)),
             transforms.ToTensor(),
