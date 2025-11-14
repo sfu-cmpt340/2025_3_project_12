@@ -1,10 +1,10 @@
-from pathlib import Path
 from image_dataset import MelanomaImageDataset
 from torch.utils.data import DataLoader, Subset
 from torchvision import transforms
-import csv
 from enum import Enum
-from util import get_path
+from pathlib import Path
+import csv
+import config
 
 class LoaderType(Enum):
     TRAINING = 1
@@ -14,19 +14,19 @@ class LoaderType(Enum):
 class ImageDatasetLoader:
     def get_loader(self, loader_type: LoaderType) -> DataLoader:
         dataset = MelanomaImageDataset(
-            metadata_csv_path = get_path("data/image_data/meta/meta.csv"),
-            images_dir= get_path("data/image_data/images/"),
+            metadata_csv_path = config.METADATA_FILE,
+            images_dir= config.IMAGE_DIRECTORY,
             transform=self._get_inception_v3_image_transform()
         )
 
         loader_map = {
-            LoaderType.TRAINING: ("train_indexes.csv", True),
-            LoaderType.VALIDATION: ("valid_indexes.csv", False),
-            LoaderType.TEST: ("test_indexes.csv", False)
+            LoaderType.TRAINING: (config.TRAIN_INDICES_FILE, True),
+            LoaderType.VALIDATION: (config.VALIDATION_INDICES_FILE, False),
+            LoaderType.TEST: (config.TEST_INDICES_FILE, False)
         }
 
-        file_name, shuffle = loader_map[loader_type]
-        indices = self._load_indices(get_path(f"data/image_data/meta/{file_name}"))
+        file_path, shuffle = loader_map[loader_type]
+        indices = self._load_indices(file_path)
         subset_dataset = Subset(dataset, indices)
         return DataLoader(subset_dataset, batch_size=32, shuffle=shuffle)
 
