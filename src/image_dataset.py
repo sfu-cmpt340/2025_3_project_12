@@ -15,15 +15,15 @@ class MelanomaImageDataset(Dataset):
     Implements minimum required functions for Dataset interface.
     """
 
-    def __init__(self, metadata_csv_path: Path, images_dir: string, transform: Optional[Callable] = None):
+    def __init__(self, metadata_csv_path: Path, images_directory_str: string, transform: Optional[Callable] = None):
         """
         Initializes MelanomaImageDataset with metadata, image directories, and optional transform.
         :param metadata_csv_path: Path object to CSV file containing image metadata.
-        :param images_dir: Path object to directory containing all images.
+        :param images_directory_str: String of directory containing all images.
         :param transform: Optional function to transform images to normalize for use with classifier model.
         """
         self.metadata_dataframe = pd.read_csv(metadata_csv_path)
-        self.images_directory = images_dir
+        self.images_directory_str = images_directory_str
         self.transform = transform
 
     def __len__(self) -> int:
@@ -40,7 +40,7 @@ class MelanomaImageDataset(Dataset):
         :return: The element's image and label (melanoma vs not melanoma).
         """
         metadata_row = self.metadata_dataframe.iloc[index]
-        image_path_str = self.images_directory + metadata_row[config.IMAGE_FILEPATH_COLUMN_NAME]
+        image_path_str = self.images_directory_str + metadata_row[config.IMAGE_FILEPATH_COLUMN_NAME]
         image_path = get_path(image_path_str)
 
         image = Image.open(image_path).convert("RGB")
