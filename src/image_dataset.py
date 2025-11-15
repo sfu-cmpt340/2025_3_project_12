@@ -1,9 +1,12 @@
+import string
 import pandas as pd
 from PIL import Image
 from torch.utils.data import Dataset
 import torch
 from pathlib import Path
 from typing import Callable, Optional, Tuple, Union
+from .util import get_path
+from .util import _get_project_root
 from . import config
 
 class MelanomaImageDataset(Dataset):
@@ -12,7 +15,7 @@ class MelanomaImageDataset(Dataset):
     Implements minimum required functions for Dataset interface.
     """
 
-    def __init__(self, metadata_csv_path: Path, images_dir: Path, transform: Optional[Callable] = None):
+    def __init__(self, metadata_csv_path: Path, images_dir: string, transform: Optional[Callable] = None):
         """
         Initializes MelanomaImageDataset with metadata, image directories, and optional transform.
         :param metadata_csv_path: Path object to CSV file containing image metadata.
@@ -37,10 +40,10 @@ class MelanomaImageDataset(Dataset):
         :return: The element's image and label (melanoma vs not melanoma).
         """
         metadata_row = self.metadata_dataframe.iloc[index]
-        image_relative_path = metadata_row[config.IMAGE_FILEPATH_COLUMN_NAME]
-        image_absolute_path = self.images_directory.joinpath(image_relative_path)
+        image_path_str = self.images_directory + metadata_row[config.IMAGE_FILEPATH_COLUMN_NAME]
+        image_path = get_path(image_path_str)
 
-        image = Image.open(image_absolute_path).convert("RGB")
+        image = Image.open(image_path).convert("RGB")
         label = 1 if config.POSITIVE_CLASS in metadata_row[config.DIAGNOSIS_COLUMN_NAME] else 0
 
         if self.transform:
