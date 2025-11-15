@@ -13,6 +13,17 @@ def _run_epoch(model: Inception3,
                num_epochs: int,
                is_training: bool,
                optimizer: Optional[optim.Optimizer] = None):
+    """
+    Perform one training or validation epoch: Forward pass and (if training) backward pass.
+    :param model: The Inception V3 model to train.
+    :param data_loader: The data loader on training or validation indices.
+    :param device: The device to run the computations on (e.g. GPU).
+    :param loss_function: The loss function (e.g. Cross Entropy Loss).
+    :param epoch: The current epoch.
+    :param num_epochs: The total number of epochs.
+    :param is_training: True if this is a training epoch (not a validation epoch)
+    :param optimizer: The gradient optimizer (if training).
+    """
     epoch_loss = 0.0
     num_correct = 0
     total_labels = 0
@@ -60,7 +71,16 @@ def train_on_images(model: Inception3,
                     validation_loader: DataLoader,
                     num_epochs: Optional[int] = 10,
                     learning_rate: Optional[float] = 0.001):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    """
+    Perform training of Inception V3 model on Melanoma image dataset.
+    :param model: The model to train.
+    :param train_loader: The dataset loader for training indices.
+    :param validation_loader: The dataset loader for validation indices.
+    :param num_epochs: The number of times to update weights.
+    :param learning_rate: The speed of updating weights.
+    :return: The trained model.
+    """
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') # use GPU if available
     model = model.to(device)
 
     loss_function = nn.CrossEntropyLoss()
