@@ -4,9 +4,8 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision.models import Inception3
 from typing import Optional
-from image_dataset_loader import get_melanoma_image_dataset_loader
-from image_dataset_loader import LoaderType
-from model import load_inception_v3
+from .image_dataset_loader import get_melanoma_image_dataset_loader, LoaderType
+from .model import load_inception_v3
 
 def _run_epoch(model: Inception3,
                data_loader: DataLoader,

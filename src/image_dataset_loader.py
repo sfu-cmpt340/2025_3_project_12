@@ -1,10 +1,10 @@
-from image_dataset import MelanomaImageDataset
 from torch.utils.data import DataLoader, Subset
 from torchvision import transforms
 from enum import Enum
 from pathlib import Path
 import csv
-import config
+from .image_dataset import MelanomaImageDataset
+from . import config
 
 class LoaderType(Enum):
     TRAINING = 1
