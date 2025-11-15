@@ -1,4 +1,4 @@
-from util import get_path
+from .util import get_path
 
 # file paths
 IMAGE_DIRECTORY = get_path("data/image_data/images")
