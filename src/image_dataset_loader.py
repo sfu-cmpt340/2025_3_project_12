@@ -43,6 +43,7 @@ def _load_indices(csv_path: Path) -> list:
     indices = []
     with open(csv_path) as file:
         reader = csv.reader(file)
+        next(reader) # skip header
         for row in reader:
             indices.append(int(row[0]))
 
