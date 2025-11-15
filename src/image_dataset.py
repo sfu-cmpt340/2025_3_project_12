@@ -6,7 +6,6 @@ import torch
 from pathlib import Path
 from typing import Callable, Optional, Tuple, Union
 from .util import get_path
-from .util import _get_project_root
 from . import config
 
 class MelanomaImageDataset(Dataset):
