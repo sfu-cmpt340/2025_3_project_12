@@ -19,7 +19,7 @@ def get_melanoma_image_dataset_loader(loader_type: LoaderType) -> DataLoader:
     """
     full_dataset = MelanomaImageDataset(
         metadata_csv_path = config.METADATA_FILE,
-        images_dir= config.IMAGE_DIRECTORY,
+        images_dir= config.IMAGE_DIRECTORY_STR,
         transform=_get_inception_v3_image_transform()
     )
 

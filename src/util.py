@@ -17,13 +17,26 @@ def _get_project_root(marker=".git") -> Path:
             return parent
     raise FileNotFoundError(f"Marker: {marker} not found")
 
+def _get_correct_case_path(relative_path: string, project_root: Path) -> Path:
+    path_parts = Path(relative_path).parts
+    current = project_root
+    for part in path_parts:
+        lowercase_path_to_correct_case_path_dict = {p.name.lower(): p for p in current.iterdir()}
+        if part.lower() not in lowercase_path_to_correct_case_path_dict:
+            raise FileNotFoundError(f"{part} not found in {current}")
+        
+        # append correct case
+        current = lowercase_path_to_correct_case_path_dict[part.lower()]
+    
+    return current
+
 def get_path(relative_path: string) -> Path:
     """
     Converts a relative path to a Path object.
     The purpose of this function is to avoid issues arising from scripts being run from different directories.
     Usage: filepath = get_path("data/file.txt")
-    :param relative_path: The relative path to the desired file or directory (starting from root directory).
+    :param relative_path: The relative path to the desired file or directory (starting from root directory). Case insensitive.
     :return: The corresponding Path object.
     """
     project_root = _get_project_root()
-    return project_root.joinpath(relative_path)
+    return _get_correct_case_path(relative_path, project_root)
