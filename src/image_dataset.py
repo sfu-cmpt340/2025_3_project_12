@@ -4,7 +4,7 @@ from torch.utils.data import Dataset
 import torch
 from pathlib import Path
 from typing import Callable, Optional, Tuple, Union
-import config
+from . import config
 
 class MelanomaImageDataset(Dataset):
     """
