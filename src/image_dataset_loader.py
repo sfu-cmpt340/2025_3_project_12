@@ -52,6 +52,7 @@ class MelanomaImageDatasetLoader:
         :param metadata_csv_path: Path object to CSV file containing image metadata.
         :param images_directory_str: String of directory containing all images.
         """
+        print('Loading Melanoma Image Dataset')
         self.dataset = MelanomaImageDataset(
             metadata_csv_path = metadata_csv_path,
             images_directory_str= images_directory_str,
@@ -69,8 +70,6 @@ class MelanomaImageDatasetLoader:
         :param loader_type: The phase (TRAINING, VALIDATION, or TEST).
         :return: The data loader.
         """
-        print(f'Partitioning Melanoma Image Dataset for {loader_type.name}')
-
         file_path, shuffle = self.loader_map[loader_type]
         indices = _load_indices(file_path)
         loader_type_subset = Subset(self.dataset, indices)
