@@ -54,7 +54,7 @@ def _run_epoch(model: Inception3,
                 main_outputs = outputs.logits
                 # weighted auxilary loss
                 loss = loss_function(main_outputs, labels) + 0.4 * loss_function(outputs.aux_logits, labels)
-            elif hassattr(outputs, 'logits'):
+            elif hasattr(outputs, 'logits'):
                 main_outputs = outputs.logits
                 loss = loss_function(main_outputs, labels)
             else:
