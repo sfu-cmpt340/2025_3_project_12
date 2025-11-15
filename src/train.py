@@ -31,7 +31,6 @@ def _run_epoch(model: Inception3,
     num_correct = 0
     total_labels = 0
     phase = "Training" if is_training else "Validation"
-    print(f'{phase} Epoch {epoch}')
 
     # set model and gradients
     if is_training:
@@ -121,4 +120,5 @@ def train_on_images():
     validation_loader = loader.get_melanoma_image_dataset_loader(LoaderType.VALIDATION)
     model = load_inception_v3()
 
+    print('Beginning training')
     return _train_on_images_internal(model, training_loader, validation_loader)
