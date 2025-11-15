@@ -49,7 +49,17 @@ def _run_epoch(model: Inception3,
 
             # forward pass
             outputs = model(images)
-            loss = loss_function(outputs, labels)
+
+            if is_training and model.aux_logits:
+                main_outputs = outputs.logits
+                # weighted auxilary loss
+                loss = loss_function(main_outputs, labels) + 0.4 * loss_function(outputs.aux_logits, labels)
+            elif hassattr(outputs, 'logits'):
+                main_outputs = outputs.logits
+                loss = loss_function(main_outputs, labels)
+            else:
+                main_outputs = outputs
+                loss = loss_function(main_outputs, labels)
 
             # backward pass (training)
             if is_training:
@@ -58,7 +68,7 @@ def _run_epoch(model: Inception3,
 
             # update validation metrics
             epoch_loss += loss.item()
-            _, predicted = torch.max(outputs.data, 1)
+            _, predicted = torch.max(main_outputs.data, 1)
             num_correct += predicted.eq(labels).sum().item()
             total_labels += labels.size(0)
 
