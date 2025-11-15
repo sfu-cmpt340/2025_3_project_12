@@ -4,8 +4,9 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision.models import Inception3
 from typing import Optional
-from .image_dataset_loader import get_melanoma_image_dataset_loader, LoaderType
+from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from .model import load_inception_v3
+from . import config
 
 def _run_epoch(model: Inception3,
                data_loader: DataLoader,
@@ -29,6 +30,8 @@ def _run_epoch(model: Inception3,
     epoch_loss = 0.0
     num_correct = 0
     total_labels = 0
+    phase = "Training" if is_training else "Validation"
+    print(f'{phase} Epoch {epoch}')
 
     # set model and gradients
     if is_training:
@@ -75,7 +78,6 @@ def _run_epoch(model: Inception3,
     # emit metrics
     normalized_epoch_loss = epoch_loss / len(data_loader)
     epoch_accuracy = 100 * num_correct / total_labels
-    phase = "Training" if is_training else "Validation"
     print(f'Epoch [{epoch}/{num_epochs}] | {phase} Loss: {normalized_epoch_loss:.4f} | {phase} Accuracy: {epoch_accuracy:.2f}%')
 
 def _train_on_images_internal(model: Inception3,
@@ -114,8 +116,9 @@ def train_on_images():
     API to call in main to train the model on Melanoma image dataset.
     :return: The trained model.
     """
-    training_loader = get_melanoma_image_dataset_loader(LoaderType.TRAINING)
-    validation_loader = get_melanoma_image_dataset_loader(LoaderType.VALIDATION)
+    loader = MelanomaImageDatasetLoader(config.METADATA_FILE, config.IMAGE_DIRECTORY_STR)
+    training_loader = loader.get_melanoma_image_dataset_loader(LoaderType.TRAINING)
+    validation_loader = loader.get_melanoma_image_dataset_loader(LoaderType.VALIDATION)
     model = load_inception_v3()
 
     return _train_on_images_internal(model, training_loader, validation_loader)
