@@ -18,6 +18,12 @@ def _get_project_root(marker=".git") -> Path:
     raise FileNotFoundError(f"Marker: {marker} not found")
 
 def _get_correct_case_path(relative_path: string, project_root: Path) -> Path:
+    """
+    Helper function to handle case mismatches between meta.csv and actual data folders.
+    :param relative_path: The path with possible incorrect casing.
+    :param project_root: The root of the project as a Path object.
+    :return: The actual Path object with correct casing.
+    """
     path_parts = Path(relative_path).parts
     current = project_root
     for part in path_parts:
