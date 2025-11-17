@@ -176,7 +176,6 @@ def main():
     paths = [s[0] for s in samples]
     labels = [s[1] for s in samples]
 
-    # 70/15/15 split with stratification
     train_paths, temp_paths, train_labels, temp_labels = train_test_split(
         paths, labels, test_size=0.3, random_state=SEED, stratify=labels
     )
@@ -236,7 +235,6 @@ def main():
 
     print("\nBest val accuracy:", best_val_acc)
 
-    # ----- Test evaluation -----
     model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=device))
     test_loss, test_acc, y_true, y_pred = eval_model(model, test_loader, criterion)
 
@@ -252,3 +250,49 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
