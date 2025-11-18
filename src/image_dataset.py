@@ -26,6 +26,10 @@ class MelanomaImageDataset(Dataset):
         self.images_zip2 = ZipFile(images_zip_paths[1], 'r')
         self.transform = transform
 
+        # Maps to perform case-insensitive searches (to handle case mismatches between meta.csv and actual data folders)
+        self.images_zip1_case_map = {name.lower(): name for name in self.images_zip1.namelist()}
+        self.images_zip2_case_map = {name.lower(): name for name in self.images_zip2.namelist()}
+
     def __len__(self) -> int:
         """
         Get size of dataset.
@@ -55,10 +59,11 @@ class MelanomaImageDataset(Dataset):
     def _get_image(self, image_metadata: pd.Series) -> Image.Image:
         image_relative_path_str = image_metadata[config.IMAGE_FILEPATH_COLUMN_NAME]
 
-        for zip_file in (self.images_zip1, self.images_zip2):
-            try:
-                image_bytes = BytesIO(zip_file.read(image_relative_path_str))
+        for zip_file, case_map in [(self.images_zip1, self.images_zip1_case_map),
+                                   (self.images_zip2, self.images_zip2_case_map)]:
+            correct_case_name = case_map.get(image_relative_path_str.lower())
+            if correct_case_name:
+                image_bytes = BytesIO(zip_file.read(correct_case_name))
                 return Image.open(image_bytes).convert("RGB")
-            except KeyError:
-                continue
+
         raise FileNotFoundError(f'File not found in image dataset: {image_relative_path_str}')
