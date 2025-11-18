@@ -39,23 +39,26 @@ class MelanomaImageDataset(Dataset):
         :param index: Index of data element.
         :return: The element's image and label (melanoma vs not melanoma).
         """
-        metadata_row = self.metadata_dataframe.iloc[index]
-        image_relative_path_str = metadata_row[config.IMAGE_FILEPATH_COLUMN_NAME]
-        image_bytes = self._get_images_bytes(image_relative_path_str)
+        # Image
+        image_metadata = self.metadata_dataframe.iloc[index]
+        image = self._get_image(image_metadata)
 
-        image = Image.open(image_bytes).convert("RGB")
-        label = 1 if config.POSITIVE_CLASS in metadata_row[config.DIAGNOSIS_COLUMN_NAME] else 0
-
+        # Image transformation
         if self.transform:
             image = self.transform(image)
 
+        # Image label
+        label = 1 if config.POSITIVE_CLASS in image_metadata[config.DIAGNOSIS_COLUMN_NAME] else 0
+
         return image, torch.tensor(label, dtype=torch.long)
 
-    def _get_images_bytes(self, image_relative_path_str: str):
+    def _get_image(self, image_metadata: pd.Series) -> Image.Image:
+        image_relative_path_str = image_metadata[config.IMAGE_FILEPATH_COLUMN_NAME]
+
         for zip_file in (self.images_zip1, self.images_zip2):
             try:
-                image_bytes = zip_file.read(image_relative_path_str)
-                return BytesIO(image_bytes)
+                image_bytes = BytesIO(zip_file.read(image_relative_path_str))
+                return Image.open(image_bytes).convert("RGB")
             except KeyError:
                 continue
         raise FileNotFoundError(f'File not found in image dataset: {image_relative_path_str}')
