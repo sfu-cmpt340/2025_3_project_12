@@ -105,7 +105,7 @@ def _train_on_images_internal(model: Inception3,
         # validation
         _run_epoch(model, validation_loader, device, loss_function, epoch + 1, num_epochs, False)
 
-        print('-' * 60)
+        print('-' * 75)
 
     print('Finished training')
     return model
