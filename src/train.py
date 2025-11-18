@@ -115,7 +115,7 @@ def train_on_images():
     API to call in main to train the model on Melanoma image dataset.
     :return: The trained model.
     """
-    loader = MelanomaImageDatasetLoader(config.METADATA_FILE, config.IMAGE_DIRECTORY_STR)
+    loader = MelanomaImageDatasetLoader(config.METADATA_FILE, config.IMAGES_ZIP_PATH)
     training_loader = loader.get_melanoma_image_dataset_loader(LoaderType.TRAINING)
     validation_loader = loader.get_melanoma_image_dataset_loader(LoaderType.VALIDATION)
     model = load_inception_v3()

@@ -41,7 +41,7 @@ def get_path(relative_path: string) -> Path:
     Converts a relative path to a Path object.
     The purpose of this function is to avoid issues arising from scripts being run from different directories.
     Usage: filepath = get_path("data/file.txt")
-    :param relative_path: The relative path to the desired file or directory (starting from root directory). Case insensitive.
+    :param relative_path: The relative path to the desired file or directory (starting from root directory). Case-insensitive.
     :return: The corresponding Path object.
     """
     project_root = _get_project_root()
