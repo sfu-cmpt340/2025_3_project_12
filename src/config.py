@@ -1,7 +1,8 @@
 from .util import get_path
 
 # file paths
-IMAGE_DIRECTORY_STR = "data/image_data/images/"
+IMAGES_ZIP_PATH_1 = get_path("data/image_data/images1.zip")
+IMAGES_ZIP_PATH_2 = get_path("data/image_data/images2.zip")
 METADATA_FILE = get_path("data/image_data/meta/meta.csv")
 TRAIN_INDICES_FILE = get_path("data/image_data/meta/train_indexes.csv")
 VALIDATION_INDICES_FILE = get_path("data/image_data/meta/valid_indexes.csv")

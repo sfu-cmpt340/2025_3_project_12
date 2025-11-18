@@ -3,7 +3,6 @@ from torchvision import transforms
 from enum import Enum
 from pathlib import Path
 import csv
-import string
 from .image_dataset import MelanomaImageDataset
 from . import config
 
@@ -46,16 +45,16 @@ class MelanomaImageDatasetLoader:
     Class to load Melanoma Image Dataset using PyTorch.
     """
 
-    def __init__(self, metadata_csv_path: Path, images_directory_str: string):
+    def __init__(self, metadata_csv_path: Path, images_zip_paths: tuple[Path, Path]):
         """
         Loads the full dataset and creates a dictionary for help with partitioning data.
         :param metadata_csv_path: Path object to CSV file containing image metadata.
-        :param images_directory_str: String of directory containing all images.
+        :param images_zip_paths: Tuple containing paths object to 2 zip files containing all images.
         """
         print('Loading Melanoma Image Dataset')
         self.dataset = MelanomaImageDataset(
             metadata_csv_path = metadata_csv_path,
-            images_directory_str= images_directory_str,
+            images_zip_paths= images_zip_paths,
             transform=_get_inception_v3_image_transform()
         )
         self.loader_map = {
