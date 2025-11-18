@@ -1,4 +1,3 @@
-import string
 from pathlib import Path
 
 """
@@ -17,7 +16,7 @@ def _get_project_root(marker=".git") -> Path:
             return parent
     raise FileNotFoundError(f"Marker: {marker} not found")
 
-def _get_correct_case_path(relative_path: string, project_root: Path) -> Path:
+def _get_correct_case_path(relative_path: str, project_root: Path) -> Path:
     """
     Helper function to handle case mismatches between meta.csv and actual data folders.
     :param relative_path: The path with possible incorrect casing.
@@ -36,7 +35,7 @@ def _get_correct_case_path(relative_path: string, project_root: Path) -> Path:
     
     return current
 
-def get_path(relative_path: string) -> Path:
+def get_path(relative_path: str) -> Path:
     """
     Converts a relative path to a Path object.
     The purpose of this function is to avoid issues arising from scripts being run from different directories.
