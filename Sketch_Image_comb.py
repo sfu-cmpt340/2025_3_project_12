@@ -40,20 +40,17 @@ np.random.seed(SEED)
 
 CLASS_NAMES = ["benign", "malignant"]
 
-# ==============================
-# 1. Sketch datasets via ImageFolder (train / val)
-# ==============================
+
 def make_sketch_datasets(sketch_root, train_transform, eval_transform):
     sketch_train_dir = Path(sketch_root) / "train"
     sketch_val_dir   = Path(sketch_root) / "val"
 
-    # Raw ImageFolder datasets
+
     sketch_train_raw = datasets.ImageFolder(root=sketch_train_dir, transform=train_transform)
     sketch_val_raw   = datasets.ImageFolder(root=sketch_val_dir,   transform=eval_transform)
 
-    print("Sketch classes:", sketch_train_raw.classes)   # e.g. ['benign','cancer'] or ['cancer','false']
+    print("Sketch classes:", sketch_train_raw.classes)
 
-    # Map original class indices to {0=benign, 1=malignant}
     benign_like = {"benign", "false", "noncancer", "non_cancer", "negative"}
     idx_to_binary = {}
     for idx, cls_name in enumerate(sketch_train_raw.classes):
@@ -61,7 +58,7 @@ def make_sketch_datasets(sketch_root, train_transform, eval_transform):
             idx_to_binary[idx] = 0
         else:
             idx_to_binary[idx] = 1
-    print("Sketch index mapping:", idx_to_binary)  # e.g. {0:1, 1:0} etc.
+    print("Sketch index mapping:", idx_to_binary)
 
     class SketchWrapper(Dataset):
         def __init__(self, base_dataset, idx_map):
@@ -270,7 +267,6 @@ def main():
 
     print("\nBest combined val accuracy:", best_val_acc)
 
-    # ---- Final test on REAL images only ----
     model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=device))
     test_loss, test_acc, y_true, y_pred = eval_model(model, real_test_loader, criterion)
 
