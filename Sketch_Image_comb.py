@@ -263,7 +263,7 @@ def main():
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             torch.save(model.state_dict(), MODEL_SAVE_PATH)
-            print(f"  🔹 New best combined model saved (val_acc={val_acc:.4f})")
+            print(f"  New best combined model saved (val_acc={val_acc:.4f})")
 
     print("\nBest combined val accuracy:", best_val_acc)
 
