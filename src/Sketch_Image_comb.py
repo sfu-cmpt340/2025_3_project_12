@@ -15,9 +15,7 @@ import config
 from image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from model import load_inception_v3
 
-# ==============================
-# CONFIG
-# ==============================
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SKETCH_ROOT = BASE_DIR / "sketch_splits"
 
@@ -25,7 +23,7 @@ MODEL_SAVE_PATH = "combined_inception_v3_best.pth"
 
 BATCH_SIZE = 32
 NUM_EPOCHS = 10
-LR = 1e-4           # often smaller LR for Inception V3 fine-tuning
+LR = 1e-4
 NUM_WORKERS = 0
 SEED = 42
 
@@ -35,17 +33,12 @@ print("Using device:", device)
 torch.manual_seed(SEED)
 np.random.seed(SEED)
 
-CLASS_NAMES = ["benign", "malignant"]  # 0 = benign, 1 = melanoma
+CLASS_NAMES = ["benign", "malignant"]  
 
 
-# ==============================
-# TRANSFORMS (Inception V3: 299x299, same normalization)
-# ==============================
+
 def get_inception_v3_train_transform() -> transforms.Compose:
-    """
-    Train-time transform for sketches, compatible with Inception V3.
-    Real images already use a similar transform inside MelanomaImageDatasetLoader.
-    """
+
     return transforms.Compose([
         transforms.Resize((299, 299)),
         transforms.RandomHorizontalFlip(),
@@ -60,9 +53,7 @@ def get_inception_v3_train_transform() -> transforms.Compose:
 
 
 def get_inception_v3_eval_transform() -> transforms.Compose:
-    """
-    Eval-time transform for sketches, compatible with Inception V3.
-    """
+
     return transforms.Compose([
         transforms.Resize((299, 299)),
         transforms.ToTensor(),
@@ -73,18 +64,11 @@ def get_inception_v3_eval_transform() -> transforms.Compose:
     ])
 
 
-# ==============================
-# SKETCH DATASETS
-# ==============================
+
 def make_sketch_datasets(sketch_root: str,
                          train_transform: transforms.Compose,
                          eval_transform: transforms.Compose):
-    """
-    Load sketch train/val datasets and remap their labels to:
-        0 = benign-like
-        1 = malignant-like
-    based on folder names.
-    """
+
     sketch_train_dir = Path(sketch_root) / "train"
     sketch_val_dir = Path(sketch_root) / "val"
 
@@ -120,16 +104,11 @@ def make_sketch_datasets(sketch_root: str,
     return sketch_train, sketch_val
 
 
-# ==============================
-# TRAIN / EVAL HELPERS (handle Inception V3 outputs)
-# ==============================
+
 def _forward_inception(model: nn.Module, images: torch.Tensor) -> torch.Tensor:
-    """
-    Handle the fact that Inception V3 returns (logits, aux_logits) in train mode.
-    We only care about the main logits for our loss.
-    """
+
     outputs = model(images)
-    # In train mode, inception_v3 returns InceptionOutputs(logits, aux_logits)
+
     if isinstance(outputs, tuple):
         outputs = outputs[0]
     return outputs
@@ -187,40 +166,31 @@ def eval_model(model, loader, criterion):
     return running_loss / total, running_correct / total, np.array(all_labels), np.array(all_preds)
 
 
-# ==============================
-# MAIN TRAINING FUNCTION (COMBINED MODEL)
-# ==============================
-def train_combined_model():
-    """
-    Train an Inception V3 model on a combination of:
-      - Sketch data from sketch_splits/
-      - Real images from the zipped melanoma dataset
-        (via MelanomaImageDatasetLoader and SFU-provided splits)
 
-    Evaluation at the end is on REAL TEST images only.
-    """
-    # ----- Sketch datasets -----
+def train_combined_model():
+
+
     sketch_train, sketch_val = make_sketch_datasets(
         SKETCH_ROOT,
         train_transform=get_inception_v3_train_transform(),
         eval_transform=get_inception_v3_eval_transform(),
     )
 
-    # ----- Real datasets via MelanomaImageDatasetLoader -----
+
     melanoma_loader = MelanomaImageDatasetLoader(
         metadata_csv_path=config.METADATA_FILE,
         images_zip_paths=(config.IMAGES_ZIP_PATH_1, config.IMAGES_ZIP_PATH_2),
     )
 
-    # DataLoaders for real images (with SFU-provided splits)
+
     real_train_loader = melanoma_loader.get_melanoma_image_dataset_loader(LoaderType.TRAINING)
     real_val_loader = melanoma_loader.get_melanoma_image_dataset_loader(LoaderType.VALIDATION)
     real_test_loader = melanoma_loader.get_melanoma_image_dataset_loader(LoaderType.TEST)
 
-    # We want combined datasets → use the underlying Subset objects
-    real_train_ds = real_train_loader.dataset   # Subset of MelanomaImageDataset
-    real_val_ds = real_val_loader.dataset       # Subset of MelanomaImageDataset
-    real_test_ds = real_test_loader.dataset     # for final evaluation only
+
+    real_train_ds = real_train_loader.dataset
+    real_val_ds = real_val_loader.dataset
+    real_test_ds = real_test_loader.dataset
 
     combined_train_ds = ConcatDataset([sketch_train, real_train_ds])
     combined_val_ds = ConcatDataset([sketch_val, real_val_ds])
@@ -233,20 +203,20 @@ def train_combined_model():
     print(f"Combined val size:  {len(combined_val_ds)}")
     print(f"Real test size:     {len(real_test_ds)}")
 
-    # New loaders for combined datasets
+
     train_loader = DataLoader(
         combined_train_ds,
         batch_size=BATCH_SIZE,
         shuffle=True,
         num_workers=NUM_WORKERS,
-        drop_last=True,  # avoid 1-sample batch
+        drop_last=True,
     )
     val_loader = DataLoader(combined_val_ds, batch_size=BATCH_SIZE, shuffle=False,
                             num_workers=NUM_WORKERS)
     real_test_loader = DataLoader(real_test_ds, batch_size=BATCH_SIZE, shuffle=False,
                                   num_workers=NUM_WORKERS)
 
-    # ----- Model: Inception V3 -----
+
     model = load_inception_v3(num_classes=2)
     model.to(device)
 
@@ -273,7 +243,7 @@ def train_combined_model():
 
     print("\nBest combined val accuracy:", best_val_acc)
 
-    # ----- Final test on REAL images only -----
+
     model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=device))
     test_loss, test_acc, y_true, y_pred = eval_model(model, real_test_loader, criterion)
 
@@ -288,9 +258,7 @@ def train_combined_model():
     print(classification_report(y_true, y_pred, target_names=CLASS_NAMES))
 
 
-# ==============================
-# main
-# ==============================
+
 def main():
     train_combined_model()
 
