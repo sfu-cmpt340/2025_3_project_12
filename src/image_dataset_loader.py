@@ -3,8 +3,9 @@ from torchvision import transforms
 from enum import Enum
 from pathlib import Path
 import csv
-from .image_dataset import MelanomaImageDataset
-from . import config
+from image_dataset import MelanomaImageDataset
+import config
+
 
 class LoaderType(Enum):
     TRAINING = 1

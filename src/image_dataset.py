@@ -6,7 +6,8 @@ from torch.utils.data import Dataset
 import torch
 from pathlib import Path
 from typing import Callable, Optional, Union
-from . import config
+import config
+
 
 class MelanomaImageDataset(Dataset):
     """

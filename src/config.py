@@ -1,4 +1,4 @@
-from .util import get_path
+from util import get_path
 
 # file paths
 IMAGES_ZIP_PATH_1 = get_path("data/image_data/images1.zip")

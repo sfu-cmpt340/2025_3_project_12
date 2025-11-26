@@ -14,7 +14,8 @@ def _get_project_root(marker=".git") -> Path:
     for parent in path.parents:
         if (parent / marker).exists():
             return parent
-    raise FileNotFoundError(f"Marker: {marker} not found")
+    return path.parent.parent
+
 
 def get_path(relative_path: str) -> Path:
     """

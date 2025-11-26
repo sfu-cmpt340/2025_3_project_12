@@ -8,15 +8,6 @@ def load_inception_v3(num_classes=2) -> Inception3:
     :param num_classes: The number of classes if not default.
     :return: The model.
     """
-
     model = models.inception_v3(weights="IMAGENET1K_V1")
-
-
     model.fc = nn.Linear(model.fc.in_features, num_classes)
-
-
-    model.aux_logits = False
-    if hasattr(model, "AuxLogits"):
-        model.AuxLogits = None
-
     return model
