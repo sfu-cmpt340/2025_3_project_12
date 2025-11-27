@@ -11,15 +11,13 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-import config
-from image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
-from model import load_inception_v3
+from . import config
+from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from .model import load_inception_v3
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-SKETCH_ROOT = BASE_DIR / "sketch_splits"
 
-MODEL_SAVE_PATH = "combined_inception_v3_best.pth"
+MODEL_SAVE_PATH = "sketches_and_images_inception_v3.pth"
 
 BATCH_SIZE = 32
 NUM_EPOCHS = 10
@@ -171,7 +169,7 @@ def train_combined_model():
 
 
     sketch_train, sketch_val = make_sketch_datasets(
-        SKETCH_ROOT,
+        config.SKETCH_DATA_ROOT,
         train_transform=get_inception_v3_train_transform(),
         eval_transform=get_inception_v3_eval_transform(),
     )

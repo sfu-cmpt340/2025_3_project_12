@@ -11,9 +11,12 @@ from torchvision import datasets, transforms, models
 
 from sklearn.metrics import confusion_matrix, classification_report
 
+from . import config
+from .model import load_inception_v3
 
 
-DATA_ROOT   = "C:/Users/User/Desktop/matlab/Project/sketch_splits"
+
+MODEL_SAVE_PATH = "sketches_inception_v3.pth"
 BATCH_SIZE  = 32
 NUM_EPOCHS  = 10
 LR          = 1e-3
@@ -75,10 +78,7 @@ def eval_model(model, loader, criterion, device):
 
 
 def main():
-
-
-
-    data_dir  = Path(DATA_ROOT)
+    data_dir  = config.SKETCH_DATA_ROOT
     train_dir = data_dir / "train"
     val_dir   = data_dir / "val"
     test_dir  = data_dir / "test"
@@ -115,7 +115,7 @@ def main():
                               num_workers=NUM_WORKERS)
 
 
-    model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
+    model = load_inception_v3(num_classes=2)
     num_ftrs = model.fc.in_features
     model.fc = nn.Linear(num_ftrs, 2)
     model = model.to(device)
@@ -127,7 +127,6 @@ def main():
     )
 
     best_val_acc = 0.0
-    best_model_path = "sketch_resnet18_best.pth"
 
     for epoch in range(NUM_EPOCHS):
         start_time = time.time()
@@ -143,13 +142,13 @@ def main():
 
         if val_acc > best_val_acc:
             best_val_acc = val_acc
-            torch.save(model.state_dict(), best_model_path)
+            torch.save(model.state_dict(), MODEL_SAVE_PATH)
             print(f"  New best model saved (val_acc = {val_acc:.4f})")
 
     print("Best val acc:", best_val_acc)
 
 
-    model.load_state_dict(torch.load(best_model_path, map_location=device))
+    model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=device))
     model.eval()
 
 
