@@ -13,7 +13,6 @@ from sklearn.metrics import confusion_matrix, classification_report
 
 
 
-DATA_ROOT   = "C:/Users/User/Desktop/matlab/Project/sketch_splits"
 BATCH_SIZE  = 32
 NUM_EPOCHS  = 10
 LR          = 1e-3
@@ -75,10 +74,7 @@ def eval_model(model, loader, criterion, device):
 
 
 def main():
-
-
-
-    data_dir  = Path(DATA_ROOT)
+    data_dir  = config.SKETCH_DATA_ROOT
     train_dir = data_dir / "train"
     val_dir   = data_dir / "val"
     test_dir  = data_dir / "test"
