@@ -11,9 +11,9 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-import config
-from image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
-from model import load_inception_v3
+from . import config
+from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from .model import load_inception_v3
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
