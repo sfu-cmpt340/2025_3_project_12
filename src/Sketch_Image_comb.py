@@ -17,7 +17,7 @@ from .model import load_inception_v3
 
 
 
-MODEL_SAVE_PATH = "combined_inception_v3_best.pth"
+MODEL_SAVE_PATH = "sketches_and_images_inception_v3.pth"
 
 BATCH_SIZE = 32
 NUM_EPOCHS = 10
