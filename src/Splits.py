@@ -4,11 +4,12 @@ from pathlib import Path
 import shutil
 
 
-BENIGN_SRC = "C:/Users/User/Desktop/matlab/Project/sketches_false_aug"
-CANCER_SRC = "C:/Users/User/Desktop/matlab/Project/aug_sketch"
+BASE_DIR = Path(__file__).resolve().parent.parent
+BENIGN_SRC = BASE_DIR / "data" / "image_data" / "sketches_false_aug"
+CANCER_SRC = BASE_DIR / "data" / "image_data" / "aug_sketch"
 
 
-OUT_ROOT = "C:/Users/User/Desktop/matlab/Project/sketch_splits"
+OUT_ROOT = BASE_DIR / "sketch_splits"
 
 
 TRAIN_RATIO = 0.7
