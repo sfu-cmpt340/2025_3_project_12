@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Callable, Optional, Union
 from . import config
 
+
+
 class MelanomaImageDataset(Dataset):
     """
     PyTorch Dataset class to represent SFU dermascopic criteria melanoma image set.
