@@ -7,8 +7,14 @@ import torch
 import torchvision.transforms as T
 
 
-INPUT_DIR = "C:/Users/User/Desktop/matlab/Project/sketches_orig"
-OUTPUT_DIR = "C:/Users/User/Desktop/matlab/Project/aug_sketch"
+BASE_DIR = Path(__file__).resolve().parent.parent  
+
+INPUT_DIR = BASE_DIR / "data" / "image_data" / "sketches_orig" # Directory containing original sketch images (should be unziped if you want to run this)
+OUTPUT_DIR = BASE_DIR / "data" / "image_data" / "aug_sketch" # Directory to save augmented images (create if not exist)
+
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+
 AUGS_PER_IMAGE = 20
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)

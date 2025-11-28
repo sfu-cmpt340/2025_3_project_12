@@ -7,8 +7,11 @@ import torch
 from torchvision import transforms as T
 
 
-INPUT_DIR = "C:/Users/User/Desktop/matlab/Project/sketches_false"
-OUTPUT_DIR = "C:/Users/User/Desktop/matlab/Project/sketches_false_aug"
+BASE_DIR = Path(__file__).resolve().parent.parent
+INPUT_DIR = BASE_DIR / "data" / "image_data" / "sketches_false" # Directory containing benign sketch images (should be unziped if you want to run this)
+OUTPUT_DIR = BASE_DIR / "data" / "image_data" / "sketches_false_aug" # Where the false ugmented images will be saved (create if not exist)
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 AUGS_PER_IMAGE = 30
 OUT_SIZE = 256
 SEED = 42
