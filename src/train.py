@@ -8,6 +8,10 @@ from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from .model import load_inception_v3
 from . import config
 
+# ------
+# Add this so that i can use the same save path convention as other training scripts
+MODEL_SAVE_PATH = "real_inception_v3_best.pth" 
+
 def _run_epoch(model: Inception3,
                data_loader: DataLoader,
                device: torch.device,
@@ -79,6 +83,9 @@ def _run_epoch(model: Inception3,
     epoch_accuracy = 100 * num_correct / total_labels
     print(f'Epoch [{epoch}/{num_epochs}] | {phase} Loss: {normalized_epoch_loss:.4f} | {phase} Accuracy: {epoch_accuracy:.2f}%')
 
+    # return metrics
+    return normalized_epoch_loss, epoch_accuracy
+
 def _train_on_images_internal(model: Inception3,
                               train_loader: DataLoader,
                               validation_loader: DataLoader,
@@ -99,12 +106,18 @@ def _train_on_images_internal(model: Inception3,
     loss_function = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
+    best_val_acc = 0.0 #add this for saving best model
+
     for epoch in range(num_epochs):
         # training
-        _run_epoch(model, train_loader, device, loss_function, epoch + 1, num_epochs, True, optimizer)
+        train_loss, train_acc = _run_epoch(model, train_loader, device, loss_function, epoch + 1, num_epochs, True, optimizer)
         # validation
-        _run_epoch(model, validation_loader, device, loss_function, epoch + 1, num_epochs, False)
-
+        val_loss, val_acc =_run_epoch(model, validation_loader, device, loss_function, epoch + 1, num_epochs, False)
+        # save best model
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            torch.save(model.state_dict(), MODEL_SAVE_PATH)
+            print(f"  New best real-only model saved (val_acc = {val_acc:.2f}%)")
         print('-' * 75)
 
     print('Finished training')

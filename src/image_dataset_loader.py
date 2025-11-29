@@ -6,6 +6,8 @@ import csv
 from .image_dataset import MelanomaImageDataset
 from . import config
 
+
+
 class LoaderType(Enum):
     TRAINING = 1
     VALIDATION = 2
