@@ -6,7 +6,7 @@ from torchvision.models import Inception3
 from typing import Optional
 from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from .model import load_inception_v3
-from . import config
+from . import file_paths
 
 # ------
 # Add this so that i can use the same save path convention as other training scripts
@@ -128,7 +128,7 @@ def train_on_images():
     API to call in main to train the model on Melanoma image dataset.
     :return: The trained model.
     """
-    loader = MelanomaImageDatasetLoader(config.METADATA_FILE, (config.IMAGES_ZIP_PATH_1, config.IMAGES_ZIP_PATH_2))
+    loader = MelanomaImageDatasetLoader(file_paths.METADATA_FILE, (file_paths.IMAGES_ZIP_PATH_1, file_paths.IMAGES_ZIP_PATH_2))
     training_loader = loader.get_melanoma_image_dataset_loader(LoaderType.TRAINING)
     validation_loader = loader.get_melanoma_image_dataset_loader(LoaderType.VALIDATION)
     model = load_inception_v3()

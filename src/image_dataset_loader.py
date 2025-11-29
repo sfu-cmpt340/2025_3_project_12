@@ -4,7 +4,7 @@ from enum import Enum
 from pathlib import Path
 import csv
 from .image_dataset import MelanomaImageDataset
-from . import config
+from . import file_paths
 
 
 
@@ -60,9 +60,9 @@ class MelanomaImageDatasetLoader:
             transform=_get_inception_v3_image_transform()
         )
         self.loader_map = {
-            LoaderType.TRAINING: (config.TRAIN_INDICES_FILE, True),
-            LoaderType.VALIDATION: (config.VALIDATION_INDICES_FILE, False),
-            LoaderType.TEST: (config.TEST_INDICES_FILE, False)
+            LoaderType.TRAINING: (file_paths.TRAIN_INDICES_FILE, True),
+            LoaderType.VALIDATION: (file_paths.VALIDATION_INDICES_FILE, False),
+            LoaderType.TEST: (file_paths.TEST_INDICES_FILE, False)
         }
 
     def get_melanoma_image_dataset_loader(self, loader_type: LoaderType) -> DataLoader:

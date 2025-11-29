@@ -11,7 +11,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from . import config
+from . import file_paths
 from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from .model import load_inception_v3
 
@@ -169,15 +169,15 @@ def train_combined_model():
 
 
     sketch_train, sketch_val = make_sketch_datasets(
-        config.SKETCH_DATA_ROOT,
+        file_paths.SKETCH_DATA_ROOT,
         train_transform=get_inception_v3_train_transform(),
         eval_transform=get_inception_v3_eval_transform(),
     )
 
 
     melanoma_loader = MelanomaImageDatasetLoader(
-        metadata_csv_path=config.METADATA_FILE,
-        images_zip_paths=(config.IMAGES_ZIP_PATH_1, config.IMAGES_ZIP_PATH_2),
+        metadata_csv_path=file_paths.METADATA_FILE,
+        images_zip_paths=(file_paths.IMAGES_ZIP_PATH_1, file_paths.IMAGES_ZIP_PATH_2),
     )
 
 

@@ -11,7 +11,7 @@ from torchvision import datasets, transforms, models
 
 from sklearn.metrics import confusion_matrix, classification_report
 
-from . import config
+from . import file_paths
 from .model import load_inception_v3
 
 
@@ -78,7 +78,7 @@ def eval_model(model, loader, criterion, device):
 
 
 def main():
-    data_dir  = Path(config.SKETCH_DATA_ROOT)
+    data_dir  = Path(file_paths.SKETCH_DATA_ROOT)
     train_dir = data_dir / "train"
     val_dir   = data_dir / "val"
     test_dir  = data_dir / "test"

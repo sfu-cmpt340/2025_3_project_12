@@ -20,7 +20,7 @@ from sklearn.metrics import (
     classification_report,
 )
 
-import config
+import file_paths
 from image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from model import load_inception_v3
 
@@ -264,8 +264,8 @@ def train_and_evaluate_sketch_only():
 
     # #vaulate on real test
     melanoma_loader = MelanomaImageDatasetLoader(
-        metadata_csv_path=config.METADATA_FILE,
-        images_zip_paths=(config.IMAGES_ZIP_PATH_1, config.IMAGES_ZIP_PATH_2),
+        metadata_csv_path=file_paths.METADATA_FILE,
+        images_zip_paths=(file_paths.IMAGES_ZIP_PATH_1, file_paths.IMAGES_ZIP_PATH_2),
     )
     real_test_loader = melanoma_loader.get_melanoma_image_dataset_loader(LoaderType.TEST)
 

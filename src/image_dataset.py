@@ -6,9 +6,13 @@ from torch.utils.data import Dataset
 import torch
 from pathlib import Path
 from typing import Callable, Optional, Union
-from . import config
+from . import file_paths
 
 
+# meta.csv values
+DIAGNOSIS_COLUMN_NAME = "diagnosis"
+IMAGE_FILEPATH_COLUMN_NAME = "derm"
+POSITIVE_CLASS = "melanoma"
 
 class MelanomaImageDataset(Dataset):
     """
@@ -54,12 +58,12 @@ class MelanomaImageDataset(Dataset):
             image = self.transform(image)
 
         # Image label
-        label = 1 if config.POSITIVE_CLASS in image_metadata[config.DIAGNOSIS_COLUMN_NAME] else 0
+        label = 1 if POSITIVE_CLASS in image_metadata[DIAGNOSIS_COLUMN_NAME] else 0
 
         return image, torch.tensor(label, dtype=torch.long)
 
     def _get_image(self, image_metadata: pd.Series) -> Image.Image:
-        image_relative_path_str = image_metadata[config.IMAGE_FILEPATH_COLUMN_NAME]
+        image_relative_path_str = image_metadata[IMAGE_FILEPATH_COLUMN_NAME]
 
         for zip_file, case_map in [(self.images_zip1, self.images_zip1_case_map),
                                    (self.images_zip2, self.images_zip2_case_map)]:

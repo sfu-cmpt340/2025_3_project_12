@@ -13,7 +13,7 @@ from sklearn.metrics import (
 
 from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from .model import load_inception_v3
-from . import config
+from . import file_paths
 from .train import MODEL_SAVE_PATH  # reuse path from train.py
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -35,8 +35,8 @@ def _forward_inception(model, images: torch.Tensor) -> torch.Tensor:
 def evaluate_real_only_model():
     # Build real-image test loader
     loader = MelanomaImageDatasetLoader(
-        metadata_csv_path=config.METADATA_FILE,
-        images_zip_paths=(config.IMAGES_ZIP_PATH_1, config.IMAGES_ZIP_PATH_2),
+        metadata_csv_path=file_paths.METADATA_FILE,
+        images_zip_paths=(file_paths.IMAGES_ZIP_PATH_1, file_paths.IMAGES_ZIP_PATH_2),
     )
     test_loader = loader.get_melanoma_image_dataset_loader(LoaderType.TEST)
 
