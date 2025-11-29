@@ -78,7 +78,7 @@ def eval_model(model, loader, criterion, device):
 
 
 def main():
-    data_dir  = config.SKETCH_DATA_ROOT
+    data_dir  = Path(config.SKETCH_DATA_ROOT)
     train_dir = data_dir / "train"
     val_dir   = data_dir / "val"
     test_dir  = data_dir / "test"
