@@ -3,13 +3,9 @@ import random
 from pathlib import Path
 import shutil
 
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-BENIGN_SRC = BASE_DIR / "data" / "image_data" / "sketches_false_aug"
-CANCER_SRC = BASE_DIR / "data" / "image_data" / "aug_sketch"
+import file_paths
 
 
-OUT_ROOT = BASE_DIR / "sketch_splits"
 
 
 TRAIN_RATIO = 0.7
@@ -64,8 +60,8 @@ def transfer_file(src, dst, mode="copy"):
 
 def make_splits():
 
-    benign_paths = list_images(BENIGN_SRC)
-    cancer_paths = list_images(CANCER_SRC)
+    benign_paths = list_images(file_paths.BENIGN_SKETCHES_AUGMENTED_OUTPUT)
+    cancer_paths = list_images(file_paths.MALIGNANT_SKETCHES_AUGMENTED_OUTPUT)
 
 
 
@@ -82,7 +78,7 @@ def make_splits():
 
     for split_name, class_dict in splits.items():
         for cls_name, paths in class_dict.items():
-            out_dir = Path(OUT_ROOT) / split_name / cls_name
+            out_dir = file_paths.SKETCH_SPLITS / split_name / cls_name
             ensure_dir(out_dir)
             for p in paths:
                 dst = out_dir / p.name
