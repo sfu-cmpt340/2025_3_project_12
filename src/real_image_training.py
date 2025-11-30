@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 from torchvision.models import Inception3
 from typing import Optional
 
-from real_real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from model import load_inception_v3
 import file_paths
 
