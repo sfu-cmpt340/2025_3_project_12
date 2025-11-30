@@ -1,5 +1,8 @@
 import time
+import os
+import shutil
 from pathlib import Path
+from zipfile import ZipFile
 
 import numpy as np
 import torch
@@ -21,7 +24,7 @@ from sklearn.metrics import (
 )
 
 import file_paths
-from real_real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from model import load_inception_v3
 
 # ------
@@ -74,12 +77,17 @@ def get_inception_v3_eval_transform() -> transforms.Compose:
 
 #------
 # Make dataset map and training functions
-def make_sketch_datasets(sketch_root: Path,
+def make_sketch_datasets(sketch_splits_zip: Path,
                          train_transform: transforms.Compose,
                          eval_transform: transforms.Compose):
-    train_dir = sketch_root / "train"
-    val_dir   = sketch_root / "val"
-    test_dir  = sketch_root / "test"
+    with ZipFile(sketch_splits_zip, 'r') as zip_file:
+        print(f"Extracting sketch_splits.zip")
+        zip_file.extractall(file_paths.SKETCH_SPLITS)
+
+    data_dir  = Path(file_paths.SKETCH_SPLITS)
+    train_dir = data_dir / "train"
+    val_dir   = data_dir / "val"
+    test_dir  = data_dir / "test"
 
     sketch_train_raw = datasets.ImageFolder(root=train_dir, transform=train_transform)
     sketch_val_raw   = datasets.ImageFolder(root=val_dir,   transform=eval_transform)
@@ -120,30 +128,6 @@ def _forward_inception(model: nn.Module, images: torch.Tensor) -> torch.Tensor:
     if isinstance(out, tuple):
         out = out[0]
     return out
-
-
-def train_one_epoch(model, loader, optimizer, criterion):
-    model.train()
-    running_loss = 0.0
-    running_correct = 0
-    total = 0
-
-    for images, labels in loader:
-        images = images.to(device)
-        labels = labels.to(device)
-
-        optimizer.zero_grad()
-        outputs = _forward_inception(model, images)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-
-        running_loss += loss.item() * images.size(0)
-        _, preds = torch.max(outputs, 1)
-        running_correct += (preds == labels).sum().item()
-        total += labels.size(0)
-
-    return running_loss / total, running_correct / total
 
 
 def eval_model_collect(model, loader, criterion):
@@ -211,44 +195,19 @@ def print_metrics_block(title: str, y_true, y_pred, y_prob):
 def train_and_evaluate_sketch_only():
     # Build sketch dataset
     sketch_train, sketch_val, sketch_test = make_sketch_datasets(
-        SKETCH_ROOT,
+        file_paths.SKETCH_SPLITS_ZIP,
         train_transform=get_inception_v3_train_transform(),
         eval_transform=get_inception_v3_eval_transform(),
     )
 
-    train_loader = DataLoader(sketch_train, batch_size=BATCH_SIZE, shuffle=True,
-                              num_workers=NUM_WORKERS, drop_last=True)
-    val_loader   = DataLoader(sketch_val,   batch_size=BATCH_SIZE, shuffle=False,
-                              num_workers=NUM_WORKERS)
     sketch_test_loader = DataLoader(sketch_test, batch_size=BATCH_SIZE, shuffle=False,
                                     num_workers=NUM_WORKERS)
 
     #Use Inception V3 model
     model = load_inception_v3(num_classes=2)
     model.to(device)
-
+    
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=LR)
-
-    best_val_acc = 0.0
-
-    for epoch in range(NUM_EPOCHS):
-        start = time.time()
-        train_loss, train_acc = train_one_epoch(model, train_loader, optimizer, criterion)
-        val_loss, val_acc, _, _, _ = eval_model_collect(model, val_loader, criterion)
-        elapsed = time.time() - start
-
-        print(f"Epoch [{epoch+1}/{NUM_EPOCHS}] "
-              f"Time: {elapsed:.1f}s | "
-              f"Train Loss: {train_loss:.4f}, Acc: {train_acc:.4f} | "
-              f"Val Loss: {val_loss:.4f}, Acc: {val_acc:.4f}")
-
-        if val_acc > best_val_acc:
-            best_val_acc = val_acc
-            torch.save(model.state_dict(), MODEL_SAVE_PATH)
-            print(f" New best sketch-only Inception V3 saved (val_acc={val_acc:.4f})")
-
-    print("\nBest sketch-only val accuracy:", best_val_acc)
 
     # Load best model for evaluation
     model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=device))
@@ -275,6 +234,9 @@ def train_and_evaluate_sketch_only():
     print(f"\nSketch-only Inception model test on REAL images:")
     print(f"   Test Loss: {real_test_loss:.4f}, Test Accuracy: {real_test_acc:.4f}")
     print_metrics_block("SKETCH-ONLY MODEL ON REAL TEST", y_true_r, y_pred_r, y_prob_r)
+
+    if os.path.exists(file_paths.SKETCH_SPLITS):
+        shutil.rmtree(file_paths.SKETCH_SPLITS)
 
 
 def main():
