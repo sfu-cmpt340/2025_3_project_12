@@ -82,11 +82,11 @@ pip install -r requirements.txt
 ## 4. Reproduction
 ```bash
 cd $THISREPO/src
-python3 real_image_training.py
-python3 sketch_training.py
-python3 combined_training.py
-python3 real_image_evaluation.py
-python3 sketch_evaluation.py
-python3 combined_evaluation.py
+python real_image_training.py
+python sketch_training.py
+python combined_training.py
+python real_image_evaluation.py
+python sketch_evaluation.py
+python combined_evaluation.py
 ```
 View evaluation results in terminal. Read our report for detailed conclusions.
