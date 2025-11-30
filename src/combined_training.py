@@ -1,5 +1,8 @@
 import time
+import os
+import shutil
 from pathlib import Path
+from zipfile import ZipFile
 
 import numpy as np
 import pandas as pd
@@ -11,9 +14,9 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-from . import file_paths
-from .real_real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
-from .model import load_inception_v3
+import file_paths
+from real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from model import load_inception_v3
 
 
 
@@ -63,12 +66,16 @@ def get_inception_v3_eval_transform() -> transforms.Compose:
 
 
 
-def make_sketch_datasets(sketch_root: str,
+def make_sketch_datasets(sketch_splits_zip: Path,
                          train_transform: transforms.Compose,
                          eval_transform: transforms.Compose):
+    with ZipFile(file_paths.SKETCH_SPLITS_ZIP, 'r') as zip_file:
+        print(f"Extracting sketch_splits.zip")
+        zip_file.extractall(file_paths.SKETCH_SPLITS)
 
-    sketch_train_dir = Path(sketch_root) / "train"
-    sketch_val_dir = Path(sketch_root) / "val"
+    data_dir  = Path(file_paths.SKETCH_SPLITS)
+    sketch_train_dir = data_dir / "train"
+    sketch_val_dir = data_dir / "val"
 
     sketch_train_raw = datasets.ImageFolder(root=sketch_train_dir, transform=train_transform)
     sketch_val_raw = datasets.ImageFolder(root=sketch_val_dir, transform=eval_transform)
@@ -169,7 +176,7 @@ def train_combined_model():
 
 
     sketch_train, sketch_val = make_sketch_datasets(
-        file_paths.SKETCH_DATA_ROOT,
+        file_paths.SKETCH_SPLITS_ZIP,
         train_transform=get_inception_v3_train_transform(),
         eval_transform=get_inception_v3_eval_transform(),
     )
@@ -254,6 +261,9 @@ def train_combined_model():
 
     print("\nClassification report:")
     print(classification_report(y_true, y_pred, target_names=CLASS_NAMES))
+
+    if os.path.exists(file_paths.SKETCH_SPLITS):
+        shutil.rmtree(file_paths.SKETCH_SPLITS)
 
 
 

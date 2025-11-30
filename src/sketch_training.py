@@ -1,5 +1,7 @@
 import os
+import shutil
 from pathlib import Path
+from zipfile import ZipFile
 import time
 import numpy as np
 
@@ -11,8 +13,8 @@ from torchvision import datasets, transforms, models
 
 from sklearn.metrics import confusion_matrix, classification_report
 
-from . import file_paths
-from .model import load_inception_v3
+import file_paths
+from model import load_inception_v3
 
 
 
@@ -78,7 +80,11 @@ def eval_model(model, loader, criterion, device):
 
 
 def main():
-    data_dir  = Path(file_paths.SKETCH_DATA_ROOT)
+    with ZipFile(file_paths.SKETCH_SPLITS_ZIP, 'r') as zip_file:
+        print(f"Extracting sketch_splits.zip")
+        zip_file.extractall(file_paths.SKETCH_SPLITS)
+    
+    data_dir  = Path(file_paths.SKETCH_SPLITS)
     train_dir = data_dir / "train"
     val_dir   = data_dir / "val"
     test_dir  = data_dir / "test"
@@ -150,6 +156,9 @@ def main():
 
     model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=device))
     model.eval()
+
+    if os.path.exists(file_paths.SKETCH_SPLITS):
+        shutil.rmtree(file_paths.SKETCH_SPLITS)
 
 
 
