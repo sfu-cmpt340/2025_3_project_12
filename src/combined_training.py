@@ -69,7 +69,7 @@ def get_inception_v3_eval_transform() -> transforms.Compose:
 def make_sketch_datasets(sketch_splits_zip: Path,
                          train_transform: transforms.Compose,
                          eval_transform: transforms.Compose):
-    with ZipFile(file_paths.SKETCH_SPLITS_ZIP, 'r') as zip_file:
+    with ZipFile(sketch_splits_zip, 'r') as zip_file:
         print(f"Extracting sketch_splits.zip")
         zip_file.extractall(file_paths.SKETCH_SPLITS)
 
