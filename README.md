@@ -72,8 +72,8 @@ repository
     ├── real_image_training.py          # Train model on real images
     ├── sketch_evaluation.py            # Evaluate model trained on sketches
     ├── sketch_training.py              # Train model on sketches
-├── README.md
-├── requirements.txt
+├── README.md                           # You are here          
+├── requirements.txt                    # Pip dependencies
 ```
 
 <a name="installation"></a>
