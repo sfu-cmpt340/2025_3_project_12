@@ -189,7 +189,7 @@ def print_metrics_block(title: str, y_true, y_pred, y_prob):
     print(cm)
 
     print("\nClassification report (benign=0, malignant=1):")
-    print(classification_report(y_true, y_pred, target_names=CLASS_NAMES))
+    print(classification_report(y_true, y_pred, target_names=CLASS_NAMES, zero_division=0))
 
 
 def train_and_evaluate_sketch_only():
