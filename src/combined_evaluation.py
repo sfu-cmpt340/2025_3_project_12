@@ -14,9 +14,9 @@ from sklearn.metrics import (
 )
 
 import file_paths
-from real_real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from model import load_inception_v3
-from Sketch_Image_comb import MODEL_SAVE_PATH  # use save path from training combined model
+from combined_training import MODEL_SAVE_PATH  # use save path from training combined model
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASS_NAMES = ["benign", "malignant"]
