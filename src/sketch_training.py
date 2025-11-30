@@ -8,7 +8,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader
+from torch.utils.data import Dataset, DataLoader
 from torchvision import datasets, transforms, models
 
 from sklearn.metrics import confusion_matrix, classification_report
@@ -22,7 +22,7 @@ MODEL_SAVE_PATH = "sketches_inception_v3.pth"
 BATCH_SIZE  = 32
 NUM_EPOCHS  = 10
 LR          = 1e-3
-NUM_WORKERS = 2
+NUM_WORKERS = 0
 
 IMG_SIZE    = 224
 
@@ -106,12 +106,42 @@ def main():
                              std=[0.229, 0.224, 0.225]),
     ])
 
-    train_dataset = datasets.ImageFolder(root=train_dir, transform=train_transform)
-    val_dataset   = datasets.ImageFolder(root=val_dir,   transform=eval_transform)
-    test_dataset  = datasets.ImageFolder(root=test_dir,  transform=eval_transform)
+    # Load raw datasets
+    train_dataset_raw = datasets.ImageFolder(root=train_dir, transform=train_transform)
+    val_dataset_raw   = datasets.ImageFolder(root=val_dir,   transform=eval_transform)
+    test_dataset_raw  = datasets.ImageFolder(root=test_dir,  transform=eval_transform)
 
-    class_names = train_dataset.classes
+    class_names = train_dataset_raw.classes
     print("Classes:", class_names)
+
+    # Have to map original multi-class labels to binary labels
+    benign_like = {"benign", "false", "noncancer", "non_cancer", "negative"}
+    idx_to_binary = {}
+    for idx, cls_name in enumerate(train_dataset_raw.classes):
+        if cls_name.lower() in benign_like:
+            idx_to_binary[idx] = 0   # benign
+        else:
+            idx_to_binary[idx] = 1   # malignant
+    print("Index mapping:", idx_to_binary)
+
+    class SketchWrapper(Dataset):
+        def __init__(self, base_dataset, idx_map):
+            self.base = base_dataset
+            self.idx_map = idx_map
+
+        def __len__(self):
+            return len(self.base)
+
+        def __getitem__(self, i):
+            img, orig_label = self.base[i]
+            new_label = self.idx_map[int(orig_label)]
+            return img, torch.tensor(new_label, dtype=torch.long)
+
+    # put together final datasets again so that it matches binary labels for evaluation
+    train_dataset = SketchWrapper(train_dataset_raw, idx_to_binary)
+    val_dataset   = SketchWrapper(val_dataset_raw,   idx_to_binary)
+    test_dataset  = SketchWrapper(test_dataset_raw,  idx_to_binary)
+
 
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True,
                               num_workers=NUM_WORKERS)
