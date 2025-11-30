@@ -23,35 +23,25 @@ Group Members:
 - Project report: Overleaf project report document.
 
 
-## Video/demo/GIF
-Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen recording or even using PowerPoint with audio or with text, showcasing your work.
-
-
 ## Table of Contents
-1. [Demo](#demo)
+1. [Demo Video](#demo)
 
-2. [Installation](#installation)
+2. [Project File Description](#project-files)
 
-3. [Reproducing this project](#repro)
+3. [Installation](#installation)
 
-4. [Guidance](#guide)
+4. [Reproducing This Project](#repro)
+
+5. [Guidance](#guide)
 
 
 <a name="demo"></a>
-## 1. Example demo
+## 1. Demo Video
 
-A minimal example to showcase your work
+Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen recording or even using PowerPoint with audio or with text, showcasing your work.
 
-```python
-from amazing import amazingexample
-imgs = amazingexample.demo()
-for img in imgs:
-    view(img)
-```
-
-### What to find where
-
-Explain briefly what files are found where
+<a name="project-files"></a>
+## 2. Project File Description
 
 ```bash
 repository
@@ -66,7 +56,7 @@ repository
     ├── file_paths.py                   # Util to handle file paths
     ├── generate_sketch_data_split.py   # Generate sketch train/validation/test split
     ├── model.py                        # Load base model (Inception V3)
-    ├── real_image_dataset_loader.py    # Custom PyTorch DatasetLoader (real images)
+    ├── real_image_dataset_loader.py    # Custom PyTorch DatasetLoader for real images
     ├── real_image_dataset.py           # Custom PyTorch Dataset for real images
     ├── real_image_evaluation.py        # Evaluate model trained on real images
     ├── real_image_training.py          # Train model on real images
@@ -78,7 +68,7 @@ repository
 
 <a name="installation"></a>
 
-## 2. Installation
+## 3. Installation
 
 ```bash
 git clone $THISREPO
@@ -89,7 +79,7 @@ pip install -r requirements.txt
 ```
 
 <a name="repro"></a>
-## 3. Reproduction
+## 4. Reproduction
 ```bash
 cd $THISREPO/src
 python3 real_image_training.py
@@ -102,7 +92,7 @@ python3 combined_evaluation.py
 View evaluation results in terminal. Read our report for detailed conclusions.
 
 <a name="guide"></a>
-## 4. Guidance
+## 5. Guidance
 
 - Use [git](https://git-scm.com/book/en/v2)
     - Do NOT use history re-editing (rebase)
