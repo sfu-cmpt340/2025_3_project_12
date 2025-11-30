@@ -163,4 +163,9 @@ cython_debug/
 # Project data (dont commit data files)
 data/image_data/images1/
 data/image_data/images2/
-data/sketch_splits/
+data/sketch_data/benign_sketches/
+data/sketch_data/malignant_sketches/
+data/sketch_data/sketch_splits/
+
+# Trained models
+*.pth
