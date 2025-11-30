@@ -1,103 +1,94 @@
-# SFU CMPT 340 Project Template -- Replace with project title
-This repository is a template for your CMPT 340 course project.
-Replace the title with your project title, and **add a snappy acronym that people remember (mnemonic)**.
+# DermoAI
+### Effects of Shifting Dependence from Real-Image to Sketch-Based inputs for Dermatoscopic Machine Learning Models
+--------
 
-Add a 1-2 line summary of your project here.
+Exploring how sketches can supplement real image data in AI dermatoscopic diagnosis.
 
 Group Members:
-1. Hieu Tran
-2. Charles Lee
+1. Charles Lee
+2. Matthew Pham
 3. Ana Premovic
-4. Temirlan Utarbayev
-5. Matthew Pham
+4. Hieu Tran
+5. Temirlan Utarbayev
+
 
 ## Important Links
 
-| [Timesheet](https://google.com) | [Slack channel](https://google.com) | [Project report](https://google.com) |
+| [Timesheet](https://1sfu-my.sharepoint.com/:x:/g/personal/hamarneh_sfu_ca/EZYBBlqVyEpJns_VDBKNJXkBpVjuvgHr5LT3pMin_eeGWg) | [Slack channel](https://cmpt340fall2025.slack.com/archives/C09EQ09FUAK) | [Project report](https://www.overleaf.com/8449614954rvhznbvyswzx#7ebf41) |
 |-----------|---------------|-------------------------|
 
 
-- Timesheet: Link your timesheet (pinned in your project's Slack channel) where you track per student the time and tasks completed/participated for this project/
-- Slack channel: Link your private Slack project channel.
-- Project report: Link your Overleaf project report document.
-
-
-## Video/demo/GIF
-Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen recording or even using PowerPoint with audio or with text, showcasing your work.
+- Timesheet: Time and tasks completed/participated for this project, per student.
+- Slack channel: Private Slack project channel.
+- Project report: Overleaf project report document.
 
 
 ## Table of Contents
-1. [Demo](#demo)
+1. [Demo Video](#demo)
 
-2. [Installation](#installation)
+2. [Project File Description](#project-files)
 
-3. [Reproducing this project](#repro)
+3. [Installation](#installation)
 
-4. [Guidance](#guide)
+4. [Reproducing This Project](#repro)
 
 
 <a name="demo"></a>
-## 1. Example demo
+## 1. Demo Video
 
-A minimal example to showcase your work
+TODO
 
-```python
-from amazing import amazingexample
-imgs = amazingexample.demo()
-for img in imgs:
-    view(img)
-```
+Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen recording or even using PowerPoint with audio or with text, showcasing your work.
 
-### What to find where
+<a name="project-files"></a>
+## 2. Project File Description
 
-Explain briefly what files are found where
+We train a model on real images only, sketches only, then a combination of both. Each training phase can be evaluated independently for comparison. The sketch data has been augmented, zipped, and uploaded already. The training/evaluation scripts use the zipped version, but if you want to see the sketch augmentation process you can run the augmentation scripts. Details on all files below.
 
 ```bash
 repository
-├── src                          ## source code of the package itself
-├── scripts                      ## scripts, if needed
-├── docs                         ## If needed, documentation   
-├── README.md                    ## You are here
-├── requirements.yml             ## If you use conda
+├── data
+    ├── image_data                      # Real images (zipped) and metadata
+    ├── sketch_data                     # Sketches (zipped), before and after augmentation
+├── src                                 
+    ├── augment_benign_sketches.py      # Data augmention (benign sketches)
+    ├── augment_malignant_sketches.py   # Data augmentation (malignant sketches)
+    ├── combined_evaluation.py          # Evaluate model trained on real images and sketches
+    ├── combined_training.py            # Train model on real images and sketches
+    ├── file_paths.py                   # Util to handle file paths
+    ├── generate_sketch_data_split.py   # Generate sketch train/validation/test split
+    ├── model.py                        # Load base model (Inception V3)
+    ├── real_image_dataset_loader.py    # Custom PyTorch DatasetLoader for real images
+    ├── real_image_dataset.py           # Custom PyTorch Dataset for real images
+    ├── real_image_evaluation.py        # Evaluate model trained on real images
+    ├── real_image_training.py          # Train model on real images
+    ├── sketch_evaluation.py            # Evaluate model trained on sketches
+    ├── sketch_training.py              # Train model on sketches
+├── README.md                           # You are here          
+├── requirements.txt                    # Pip dependencies
 ```
 
 <a name="installation"></a>
 
-## 2. Installation
-
-Provide sufficient instructions to reproduce and install your project. 
-Provide _exact_ versions, test on CSIL or reference workstations.
+## 3. Installation
 
 ```bash
 git clone $THISREPO
 cd $THISREPO
-conda env create -f requirements.yml
-conda activate amazing
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 <a name="repro"></a>
-## 3. Reproduction
-Demonstrate how your work can be reproduced, e.g. the results in your report.
+## 4. Reproduction
 ```bash
-mkdir tmp && cd tmp
-wget https://yourstorageisourbusiness.com/dataset.zip
-unzip dataset.zip
-conda activate amazing
-python evaluate.py --epochs=10 --data=/in/put/dir
+cd $THISREPO/src
+python real_image_training.py
+python sketch_training.py
+python combined_training.py
+python real_image_evaluation.py
+python sketch_evaluation.py
+python combined_evaluation.py
 ```
-Data can be found at ...
-Output will be saved in ...
-
-<a name="guide"></a>
-## 4. Guidance
-
-- Use [git](https://git-scm.com/book/en/v2)
-    - Do NOT use history re-editing (rebase)
-    - Commit messages should be informative:
-        - No: 'this should fix it', 'bump' commit messages
-        - Yes: 'Resolve invalid API call in updating X'
-    - Do NOT include IDE folders (.idea), or hidden files. Update your .gitignore where needed.
-    - Do NOT use the repository to upload data
-- Use [VSCode](https://code.visualstudio.com/) or a similarly powerful IDE
-- Use [Copilot for free](https://dev.to/twizelissa/how-to-enable-github-copilot-for-free-as-student-4kal)
-- Sign up for [GitHub Education](https://education.github.com/) 
+View evaluation results in terminal. Read our report for detailed conclusions.
