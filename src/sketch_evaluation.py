@@ -26,6 +26,7 @@ from sklearn.metrics import (
 import file_paths
 from real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from model import load_inception_v3
+from sketch_training import MODEL_SAVE_PATH
 
 # ------
 # Set Up like Model_Sketches.py from Tim
@@ -44,7 +45,6 @@ torch.manual_seed(SEED)
 np.random.seed(SEED)
 
 CLASS_NAMES = ["benign", "malignant"]
-MODEL_SAVE_PATH = "sketch_inception_v3_best.pth"
 
 
 # ------
