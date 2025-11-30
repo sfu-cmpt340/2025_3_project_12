@@ -55,11 +55,25 @@ Explain briefly what files are found where
 
 ```bash
 repository
-├── src                          ## source code of the package itself
-├── scripts                      ## scripts, if needed
-├── docs                         ## If needed, documentation   
-├── README.md                    ## You are here
-├── requirements.yml             ## If you use conda
+├── data
+    ├── image_data                      # Real images (zipped) and metadata
+    ├── sketch_data                     # Sketches (zipped), before augmentation
+├── src                                 
+    ├── augment_benign_sketches.py      # Data augmention (benign sketches)
+    ├── augment_malignant_sketches.py   # Data augmentation (malignant sketches)
+    ├── combined_evaluation.py          # Evaluate model trained on real images and sketches
+    ├── combined_training.py            # Train model on real images and sketches
+    ├── file_paths.py                   # Util to handle file paths
+    ├── generate_sketch_data_split.py   # Generate sketch train/validation/test split
+    ├── model.py                        # Load base model (Inception V3)
+    ├── real_image_dataset_loader.py    # Custom PyTorch DatasetLoader (real images)
+    ├── real_image_dataset.py           # Custom PyTorch Dataset for real images
+    ├── real_image_evaluation.py        # Evaluate model trained on real images
+    ├── real_image_training.py          # Train model on real images
+    ├── sketch_evaluation.py            # Evaluate model trained on sketches
+    ├── sketch_training.py              # Train model on sketches
+├── README.md
+├── requirements.txt
 ```
 
 <a name="installation"></a>
