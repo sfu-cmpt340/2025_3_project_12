@@ -1,25 +1,26 @@
-# SFU CMPT 340 Project Template -- Replace with project title
-This repository is a template for your CMPT 340 course project.
-Replace the title with your project title, and **add a snappy acronym that people remember (mnemonic)**.
+# DermoAI
+### Effects of Shifting Dependence from Real-Image to Sketch-Based inputs for Dermatoscopic Machine Learning Models
+--------
 
-Add a 1-2 line summary of your project here.
+Exploring how sketches can supplement real image data in AI dermatoscopic diagnosis.
 
 Group Members:
-1. Hieu Tran
-2. Charles Lee
+1. Charles Lee
+2. Matthew Pham
 3. Ana Premovic
-4. Temirlan Utarbayev
-5. Matthew Pham
+4. Hieu Tran
+5. Temirlan Utarbayev
+
 
 ## Important Links
 
-| [Timesheet](https://google.com) | [Slack channel](https://google.com) | [Project report](https://google.com) |
+| [Timesheet](https://1sfu-my.sharepoint.com/:x:/g/personal/hamarneh_sfu_ca/EZYBBlqVyEpJns_VDBKNJXkBpVjuvgHr5LT3pMin_eeGWg) | [Slack channel](https://cmpt340fall2025.slack.com/archives/C09EQ09FUAK) | [Project report](https://www.overleaf.com/8449614954rvhznbvyswzx#7ebf41) |
 |-----------|---------------|-------------------------|
 
 
-- Timesheet: Link your timesheet (pinned in your project's Slack channel) where you track per student the time and tasks completed/participated for this project/
-- Slack channel: Link your private Slack project channel.
-- Project report: Link your Overleaf project report document.
+- Timesheet: Time and tasks completed/participated for this project, per student.
+- Slack channel: Private Slack project channel.
+- Project report: Overleaf project report document.
 
 
 ## Video/demo/GIF
