@@ -80,14 +80,12 @@ repository
 
 ## 2. Installation
 
-Provide sufficient instructions to reproduce and install your project. 
-Provide _exact_ versions, test on CSIL or reference workstations.
-
 ```bash
 git clone $THISREPO
 cd $THISREPO
-conda env create -f requirements.yml
-conda activate amazing
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 <a name="repro"></a>
