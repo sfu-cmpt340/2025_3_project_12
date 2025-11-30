@@ -12,10 +12,10 @@ SKETCH_DIRECTORY = _get_data_directory() / "sketch_data"
 # real images
 IMAGES_ZIP_PATH_1 = REAL_IMAGE_DIRECTORY / "images1.zip"
 IMAGES_ZIP_PATH_2 = REAL_IMAGE_DIRECTORY / "images2.zip"
-METADATA_FILE = REAL_IMAGE_DIRECTORY / "/meta/meta.csv"
-TRAIN_INDICES_FILE = REAL_IMAGE_DIRECTORY / "/meta/train_indexes.csv"
-VALIDATION_INDICES_FILE = REAL_IMAGE_DIRECTORY / "/meta/valid_indexes.csv"
-TEST_INDICES_FILE = REAL_IMAGE_DIRECTORY / "/meta/test_indexes.csv"
+METADATA_FILE = REAL_IMAGE_DIRECTORY / "meta/meta.csv"
+TRAIN_INDICES_FILE = REAL_IMAGE_DIRECTORY / "meta/train_indexes.csv"
+VALIDATION_INDICES_FILE = REAL_IMAGE_DIRECTORY / "meta/valid_indexes.csv"
+TEST_INDICES_FILE = REAL_IMAGE_DIRECTORY / "meta/test_indexes.csv"
 
 # sketches
 MALIGNANT_SKETCHES_ZIP = SKETCH_DIRECTORY / "malignant_sketches.zip"
