@@ -1,23 +1,21 @@
 import os
 import random
-from pathlib import Path
 
+from pathlib import Path
 from PIL import Image
+from zipfile import ZipFile
+from io import BytesIO
 import torch
 import torchvision.transforms as T
 
+import file_paths
 
-BASE_DIR = Path(__file__).resolve().parent.parent  
 
-INPUT_DIR = BASE_DIR / "data" / "image_data" / "sketches_orig" # Directory containing original sketch images (should be unziped if you want to run this)
-OUTPUT_DIR = BASE_DIR / "data" / "image_data" / "aug_sketch" # Directory to save augmented images (create if not exist)
-
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+file_paths.MALIGNANT_SKETCHES_AUGMENTED_OUTPUT.mkdir(parents=True, exist_ok=True)
 
 
 AUGS_PER_IMAGE = 20
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
 random.seed(42)
 torch.manual_seed(42)
 
@@ -52,25 +50,26 @@ def load_image_as_rgb(path):
 
 
 def augment_sketches():
-    input_paths = [
-        p for p in Path(INPUT_DIR).glob("*")
-        if p.suffix.lower() in {".png", ".jpg", ".jpeg"}
-    ]
+    with ZipFile(file_paths.MALIGNANT_SKETCHES_ZIP, 'r') as zip_file:
+        input_paths = [
+            name for name in zip_file.namelist()
+            if Path(name).suffix.lower() in {".png", ".jpg", ".jpeg"}
+        ]
 
 
+        for img_path in input_paths:
+            image_bytes = BytesIO(zip_file.read(img_path))
+            img = Image.open(image_bytes).convert("RGB")
+            stem = Path(img_path).stem  # filename without extension
 
-    for img_path in input_paths:
-        img = load_image_as_rgb(img_path)
-        stem = img_path.stem  # filename without extension
+            for i in range(AUGS_PER_IMAGE):
+                # Convert PIL -> tensor in [0,1] range
+                img_tensor = T.functional.pil_to_tensor(img)
+                aug_img = augment(img_tensor)
 
-        for i in range(AUGS_PER_IMAGE):
-            # Convert PIL -> tensor in [0,1] range
-            img_tensor = T.functional.pil_to_tensor(img)
-            aug_img = augment(img_tensor)
-
-            out_name = f"{stem}_aug_{i:02d}.png"
-            out_path = os.path.join(OUTPUT_DIR, out_name)
-            aug_img.save(out_path)
+                out_name = f"{stem}_aug_{i:02d}.png"
+                out_path = os.path.join(file_paths.MALIGNANT_SKETCHES_AUGMENTED_OUTPUT, out_name)
+                aug_img.save(out_path)
 
 
 

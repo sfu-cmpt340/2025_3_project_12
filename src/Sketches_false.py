@@ -1,22 +1,21 @@
 import os
 import random
+
 from pathlib import Path
-
 from PIL import Image
+from zipfile import ZipFile
+from io import BytesIO
 import torch
-from torchvision import transforms as T
+import torchvision.transforms as T
 
+import file_paths
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-INPUT_DIR = BASE_DIR / "data" / "image_data" / "sketches_false" # Directory containing benign sketch images (should be unziped if you want to run this)
-OUTPUT_DIR = BASE_DIR / "data" / "image_data" / "sketches_false_aug" # Where the false ugmented images will be saved (create if not exist)
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+file_paths.BENIGN_SKETCHES_AUGMENTED_OUTPUT.mkdir(parents=True, exist_ok=True)
 
 AUGS_PER_IMAGE = 30
 OUT_SIZE = 256
 SEED = 42
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
 random.seed(SEED)
 torch.manual_seed(SEED)
 
@@ -46,35 +45,37 @@ augment = T.Compose([
 ])
 
 
-def is_image_file(path: Path) -> bool:
-    return path.suffix.lower() in IMG_EXTS
+def is_image_file(name: str) -> bool:
+    return Path(name).suffix.lower() in IMG_EXTS
 
 
 
 def augment_benign_sketches(input_dir, output_dir, augs_per_image=AUGS_PER_IMAGE):
-    input_paths = [p for p in Path(input_dir).glob("*") if is_image_file(p)]
+    with ZipFile(file_paths.BENIGN_SKETCHES_ZIP, 'r') as zip_file:
+        input_paths = [name for name in zip_file.namelist() if is_image_file(name)]
 
 
-    for img_path in input_paths:
-        try:
-            img = Image.open(img_path).convert("RGB")
-        except Exception as e:
-            print(f"Skipping {img_path} ({e})")
-            continue
+        for img_path in input_paths:
+            try:
+                image_bytes = BytesIO(zip_file.read(img_path))
+                img = Image.open(image_bytes).convert("RGB")
+            except Exception as e:
+                print(f"Skipping {img_path} ({e})")
+                continue
 
-        stem = img_path.stem
-
-
-        base_out = img.resize((OUT_SIZE, OUT_SIZE), Image.BILINEAR)
-        base_out_path = os.path.join(OUTPUT_DIR, f"{stem}_base.png")
-        base_out.save(base_out_path)
+            stem = Path(img_path).stem
 
 
-        for i in range(augs_per_image):
-            aug_img = augment(img)
-            out_name = f"{stem}_aug_{i:02d}.png"
-            out_path = os.path.join(OUTPUT_DIR, out_name)
-            aug_img.save(out_path)
+            base_out = img.resize((OUT_SIZE, OUT_SIZE), Image.BILINEAR)
+            base_out_path = os.path.join(file_paths.BENIGN_SKETCHES_AUGMENTED_OUTPUT, f"{stem}_base.png")
+            base_out.save(base_out_path)
+
+
+            for i in range(augs_per_image):
+                aug_img = augment(img)
+                out_name = f"{stem}_aug_{i:02d}.png"
+                out_path = os.path.join(file_paths.BENIGN_SKETCHES_AUGMENTED_OUTPUT, out_name)
+                aug_img.save(out_path)
 
 
 
@@ -82,4 +83,4 @@ def augment_benign_sketches(input_dir, output_dir, augs_per_image=AUGS_PER_IMAGE
 
 
 if __name__ == "__main__":
-    augment_benign_sketches(INPUT_DIR, OUTPUT_DIR, AUGS_PER_IMAGE)
+    augment_benign_sketches(file_paths.BENIGN_SKETCHES_ZIP, file_paths.BENIGN_SKETCHES_AUGMENTED_OUTPUT, AUGS_PER_IMAGE)
