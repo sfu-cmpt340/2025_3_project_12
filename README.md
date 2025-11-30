@@ -90,16 +90,16 @@ pip install -r requirements.txt
 
 <a name="repro"></a>
 ## 3. Reproduction
-Demonstrate how your work can be reproduced, e.g. the results in your report.
 ```bash
-mkdir tmp && cd tmp
-wget https://yourstorageisourbusiness.com/dataset.zip
-unzip dataset.zip
-conda activate amazing
-python evaluate.py --epochs=10 --data=/in/put/dir
+cd $THISREPO/src
+python3 real_image_training.py
+python3 sketch_training.py
+python3 combined_training.py
+python3 real_image_evaluation.py
+python3 sketch_evaluation.py
+python3 combined_evaluation.py
 ```
-Data can be found at ...
-Output will be saved in ...
+View evaluation results in terminal. Read our report for detailed conclusions.
 
 <a name="guide"></a>
 ## 4. Guidance
