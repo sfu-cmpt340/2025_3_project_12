@@ -1,4 +1,4 @@
-from src.train import train_on_images
+from src.real_image_training import train_on_images
 
 def main():
     train_on_images()

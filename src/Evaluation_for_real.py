@@ -11,10 +11,10 @@ from sklearn.metrics import (
     classification_report,
 )
 
-from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from .real_real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from .model import load_inception_v3
 from . import file_paths
-from .train import MODEL_SAVE_PATH  # reuse path from train.py
+from .real_image_training import MODEL_SAVE_PATH  # reuse path from train.py
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 CLASS_NAMES = ["benign", "malignant"]

@@ -4,9 +4,10 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision.models import Inception3
 from typing import Optional
-from .image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
-from .model import load_inception_v3
-from . import file_paths
+
+from real_real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from model import load_inception_v3
+import file_paths
 
 # ------
 # Add this so that i can use the same save path convention as other training scripts
@@ -135,3 +136,6 @@ def train_on_images():
 
     print('Beginning training')
     return _train_on_images_internal(model, training_loader, validation_loader)
+
+if __name__ == "__main__":
+    train_on_images()

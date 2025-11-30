@@ -21,7 +21,7 @@ from sklearn.metrics import (
 )
 
 import file_paths
-from image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
+from real_real_image_dataset_loader import MelanomaImageDatasetLoader, LoaderType
 from model import load_inception_v3
 
 # ------

@@ -3,8 +3,9 @@ from torchvision import transforms
 from enum import Enum
 from pathlib import Path
 import csv
-from .image_dataset import MelanomaImageDataset
-from . import file_paths
+
+from real_image_dataset import MelanomaImageDataset
+import file_paths
 
 
 
