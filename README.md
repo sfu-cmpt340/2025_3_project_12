@@ -41,11 +41,13 @@ Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen record
 <a name="project-files"></a>
 ## 2. Project File Description
 
+We train a model on real images only, sketches only, then a combination of both. Each training phase can be evaluated independently for comparison. The sketch data has been augmented, zipped, and uploaded already. The training/evaluation scripts use the zipped version, but if you want to see the sketch augmentation process you can run the augmentation scripts. Details on all files below.
+
 ```bash
 repository
 ├── data
     ├── image_data                      # Real images (zipped) and metadata
-    ├── sketch_data                     # Sketches (zipped), before augmentation
+    ├── sketch_data                     # Sketches (zipped), before and after augmentation
 ├── src                                 
     ├── augment_benign_sketches.py      # Data augmention (benign sketches)
     ├── augment_malignant_sketches.py   # Data augmentation (malignant sketches)
