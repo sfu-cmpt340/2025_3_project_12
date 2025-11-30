@@ -3,9 +3,8 @@ import os
 from pathlib import Path
 
 def _get_data_directory() -> Path:
-    project_root = os.path.abspath(__file__).parent()
-    data_directory = project_root / "data"
-    return Path(os.path.dirname(data_directory))
+    project_root = Path(__file__).resolve().parent.parent
+    return project_root / "data"
 
 REAL_IMAGE_DIRECTORY = _get_data_directory() / "image_data"
 SKETCH_DIRECTORY = _get_data_directory() / "sketch_data"
