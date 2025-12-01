@@ -36,9 +36,7 @@ Group Members:
 <a name="demo"></a>
 ## 1. Demo Video
 
-TODO
-
-Record a short video (1:40 - 2 minutes maximum) or gif or a simple screen recording or even using PowerPoint with audio or with text, showcasing your work.
+[![Watch the video](https://img.youtube.com/vi/9NIgKocOurw/maxresdefault.jpg)](https://youtu.be/9NIgKocOurw)
 
 <a name="project-files"></a>
 ## 2. Project File Description
